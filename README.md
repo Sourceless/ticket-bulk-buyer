@@ -38,3 +38,5 @@ Once you've entered it, it will go through the interface and queue up tickets in
 * You will lose some money due to booking through trainline, but it is still *much* cheaper than a season ticket or daily anytime tickets
 * In fact for the journey shown it's about £20 cheaper per week which is nearly £1000 a year
 * It will use trainline to figure out the best deal.
+* There is an option `--young` if you want to add a 16-25 railcard
+* Weekend days are skipped by default, but you can incldue them with `-w`
