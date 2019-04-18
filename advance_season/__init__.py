@@ -8,6 +8,7 @@ Usage:
 Options:
   -h --help   Show this screen.
   -w          Include weekends
+  --young     Include 16-25 railcard
 """
 
 
@@ -38,7 +39,7 @@ def force_click(element):
     element.send_keys(Keys.SPACE)
 
 
-def get_price_and_times(date, start, end, origin, destination, first_run=True):
+def get_price_and_times(date, start, end, origin, destination, first_run=True, add_railcard=False):
     if first_run:
         DRIVER.get('https://thetrainline.com/')
 
@@ -84,17 +85,18 @@ def get_price_and_times(date, start, end, origin, destination, first_run=True):
     mins = DRIVER.find_elements_by_name('minutes')[1]
     Select(mins).select_by_value(end_mins)
 
-    railcard_box = DRIVER.find_element_by_id('passenger-summary-btn')
-    railcard_box.click()
+    if add_railcard:
+        railcard_box = DRIVER.find_element_by_id('passenger-summary-btn')
+        railcard_box.click()
 
-    railcard_button = railcard_box.find_element_by_xpath("//button[contains(.,'Add railcard')]")
-    railcard_button.click()
+        railcard_button = railcard_box.find_element_by_xpath("//button[contains(.,'Add railcard')]")
+        railcard_button.click()
 
-    railcard_select = DRIVER.find_element_by_id('railcardRow0')
-    Select(railcard_select).select_by_visible_text('16-25 Railcard')
+        railcard_select = DRIVER.find_element_by_id('railcardRow0')
+        Select(railcard_select).select_by_visible_text('16-25 Railcard')
 
-    done = railcard_box.find_element_by_xpath("//button[contains(.,'Done')]")
-    done.click()
+        done = railcard_box.find_element_by_xpath("//button[contains(.,'Done')]")
+        done.click()
 
     submit = DRIVER.find_element_by_xpath("//button[contains(.,'Get times & tickets')]")
     submit.click()
@@ -169,7 +171,7 @@ def main():
 
     first_run = True
     for date in calc_dates(arguments['<date_from>'], arguments['<date_to>'], not arguments.get('-w', False)):
-        get_price_and_times(date, arguments['<set_off_time>'], arguments['<return_time>'], arguments['<origin>'], arguments['<destination>'], first_run)
+        get_price_and_times(date, arguments['<set_off_time>'], arguments['<return_time>'], arguments['<origin>'], arguments['<destination>'], first_run, arguments.get('--young', False))
         first_run = False
 
     continue_ = DRIVER.find_element_by_xpath("//button[contains(@data-test, 'cjs-button-continue')]")
