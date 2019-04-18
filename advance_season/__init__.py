@@ -7,7 +7,7 @@ Usage:
 
 Options:
   -h --help   Show this screen.
-  -w          Weekdays only in date range
+  -w          Include weekends
 """
 
 
@@ -141,7 +141,7 @@ def sign_in(email_data, password_data):
     submit.click()
 
 
-def calc_dates(start, end, skip_weekends=False):
+def calc_dates(start, end, skip_weekends=True):
     date_format = "%Y-%m-%d"
     start_date = datetime.datetime.strptime(start, date_format)
     end_date = datetime.datetime.strptime(end, date_format)
@@ -168,7 +168,7 @@ def main():
     sign_in(arguments['<email>'], password)
 
     first_run = True
-    for date in calc_dates(arguments['<date_from>'], arguments['<date_to>'], arguments.get('-w', False)):
+    for date in calc_dates(arguments['<date_from>'], arguments['<date_to>'], not arguments.get('-w', False)):
         get_price_and_times(date, arguments['<set_off_time>'], arguments['<return_time>'], arguments['<origin>'], arguments['<destination>'], first_run)
         first_run = False
 
